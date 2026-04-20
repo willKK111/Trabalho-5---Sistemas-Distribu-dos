@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Agro Monitor Flask</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 50px;
+        background: #f0f2f5;
+      }
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        min-width: 160px;
+      }
+      .label {
+        color: #65676b;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #1c1e21;
+      }
+      .unit {
+        font-size: 18px;
+        color: #888;
+      }
+      #irrigador-status {
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+        font-size: 18px;
+      }
+      .bg-on {
+        background-color: #2ecc71;
+      }
+      .bg-off {
+        background-color: #e74c3c;
+      }
+      .bg-none {
+        background-color: #bdc3c7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="label">UMIDADE</div>
+      <div class="value">
+        <span id="umidade">--</span><span class="unit">%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">TEMPERATURA</div>
+      <div class="value">
+        <span id="temp">--</span><span class="unit">°C</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">IRRIGADOR</div>
+      <div style="margin-top: 10px">
+        <span id="irrigador-status" class="bg-none">AGUARDANDO</span>
+      </div>
+    </div>
+
+    <script>
+      // Conecta ao servidor Flask (SocketIO)
+      var socket = io();
+
+      socket.on("connect", function () {
+        console.log("Conectado ao Servidor Flask!");
+      });
+
+      // Ouve o evento 'mqtt_update' enviado pelo Python
+      socket.on("mqtt_update", function (data) {
+        console.log("Recebido:", data);
+
+        if (data.topic === "agro/umidade") {
+          document.getElementById("umidade").innerText = data.value;
+        } else if (data.topic === "agro/temperatura") {
+          document.getElementById("temp").innerText = data.value;
+        } else if (data.topic === "agro/irrigador") {
+          var statusEl = document.getElementById("irrigador-status");
+          statusEl.innerText = data.value;
+
+          // Muda a cor do fundo
+          if (data.value === "ON") {
+            statusEl.className = "bg-on";
+          } else {
+            statusEl.className = "bg-off";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
