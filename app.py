@@ -2,6 +2,10 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 import paho.mqtt.client as mqtt
 
+#Configuração da Conexão
+Porta = 8883
+BROKER = "78262e395b904e27b6d8063d6d83424a.s1.eu.hivemq.cloud"
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -22,7 +26,7 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 
 
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(BROKER, Porta, 60)
 mqtt_client.loop_start()
 
 @app.route('/')

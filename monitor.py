@@ -1,5 +1,9 @@
 import paho.mqtt.client as mqtt
 
+#Configuração da Conexão
+Porta = 8883
+BROKER = "78262e395b904e27b6d8063d6d83424a.s1.eu.hivemq.cloud"
+
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Conectado com sucesso ao HiveMQ!")
@@ -20,7 +24,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 
-client.connect("localhost", 1883, 60)
+client.connect(BROKER, Porta, 60)
 
 print("Iniciando loop de escuta...")
 client.loop_forever()

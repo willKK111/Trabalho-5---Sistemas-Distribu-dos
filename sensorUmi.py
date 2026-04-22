@@ -3,8 +3,8 @@ import time
 import random
 
 # Configurações de Conexão
-BROKER = "localhost"
-PORTA = 1883
+BROKER = "78262e395b904e27b6d8063d6d83424a.s1.eu.hivemq.cloud"
+PORTA = 8883
 USER = "admin"      
 PASSWORD = "hivemq" 
 
